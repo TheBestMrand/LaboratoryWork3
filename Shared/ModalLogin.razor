@@ -1,23 +1,34 @@
-﻿@using LaboratoryWork3.ViewModels
-@using Microsoft.AspNetCore.Components
+﻿@using Microsoft.AspNetCore.Components
 @using LaboratoryWork3.Models.Data
-@inject UserAuthenticationViewModel UserAuthViewModel
+@using System.ComponentModel.DataAnnotations
+@using LaboratoryWork3.Models.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@inject CustomAuthenticationStateProvider CustomAuthStateProvider
 
 <Modal @ref="LoginModal">
-    <ModalHeader>
-        <h3>Login</h3>
-    </ModalHeader>
-    <ModalBody>
-        <div class="form-group">
-                <label for="email">Email:</label>
-                <input id="email" class="form-control" @bind="@user.Email" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input id="password" type="password" class="form-control" @bind="@user.Password" />
-            </div>
-        <button @onclick="LoginUser" class="btn btn-primary">Login</button>
-    </ModalBody>
+    <div class="custom-modal-wrapper">
+        <ModalHeader Class="custom-modal-header">
+            <h3>Login</h3>
+        </ModalHeader>
+        <ModalBody Class="custom-modal-body">
+            <EditForm Model="@user" OnValidSubmit="@LoginUser">
+                <DataAnnotationsValidator/>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input id="email" class="form-control" @bind="@user.Email"/>
+                    <ValidationMessage For="@(() => user.Email)"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input id="password" type="password" class="form-control" @bind="@user.Password"/>
+                    <ValidationMessage For="@(() => user.Password)"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </EditForm>
+        </ModalBody>
+    </div>
 </Modal>
 
 @code {
@@ -26,8 +37,8 @@
 
     private async Task LoginUser()
     {
-        await UserAuthViewModel.LoginAsync(user.Email, user.Password);
-        await LoginModal.Hide();
+        await CustomAuthStateProvider.Login(user);
+        LoginModal.Hide();
     }
 
     public void Show() => LoginModal.Show();

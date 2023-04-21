@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using LaboratoryWork3.Models.Services;
+using LaboratoryWork3.Models.Data;
 
 namespace LaboratoryWork3.ViewModels
 {
     public class UserAuthenticationViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        
-        private readonly AuthenticationService _authenticationService;
+        public User CurrentUser { get; private set; }
 
         private bool _isAuthenticated;
 
@@ -16,11 +15,6 @@ namespace LaboratoryWork3.ViewModels
         {
             get => _isAuthenticated;
             set => SetField(ref _isAuthenticated, value);
-        }
-
-        public UserAuthenticationViewModel(AuthenticationService authenticationService)
-        {
-            _authenticationService = authenticationService;
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -38,13 +32,13 @@ namespace LaboratoryWork3.ViewModels
 
         public async Task LoginAsync(string email, string password)
         {
-            var user = await _authenticationService.LoginUserAsync(email, password);
-            IsAuthenticated = user != null;
+
         }
 
-        public async Task SignUpAsync(string email, string password)
+        public void Logout()
         {
-            await _authenticationService.RegisterUserAsync(email, password);
+            CurrentUser = null;
+            IsAuthenticated = false;
         }
     }
 }

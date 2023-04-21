@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
+    <NotAuthorized>
+        @{
+            Redirect();
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+
+    private async void Redirect()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (!authState.User.Identity.IsAuthenticated)
+            Navigation.NavigateTo("/", true);
+    }
+
+}

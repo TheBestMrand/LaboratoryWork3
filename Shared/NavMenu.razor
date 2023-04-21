@@ -1,0 +1,108 @@
+﻿@using LaboratoryWork3.Shared
+@using LaboratoryWork3.Models.Services
+@using LaboratoryWork3.ViewModels
+@inject NavMenuViewModel NavMenuVM
+@inject CustomAuthenticationStateProvider CustomAuthStateProvider
+
+<div class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+        <a class="navbar-brand" href="/">YourAppName</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/">
+                        <span class="oi oi-home" aria-hidden="true"></span> Main
+                    </NavLink>
+                </li>
+                @if (isAuthenticated)
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/services">
+                            Services
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/residents">
+                            Residents
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/task1">
+                            Task1
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/task2">
+                            Task2
+                        </NavLink>
+                    </li>
+                }
+            </ul>
+            <ul class="navbar-nav">
+                @if (!isAuthenticated)
+                {
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link" @onclick="@ShowLoginModal">Login</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link" @onclick="@ShowSignUpModal">Sign Up</button>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link" @onclick="@Logout">Logout</button>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ModalLogin @ref="LoginModal" />
+<ModalSignUp @ref="SignUpModal" />
+
+@code {
+    private ModalLogin LoginModal;
+    private ModalSignUp SignUpModal;
+
+    private bool isAuthenticated;
+
+    private void ShowLoginModal()
+    {
+        LoginModal.Show();
+    }
+
+    private void ShowSignUpModal()
+    {
+        SignUpModal.Show();
+    }
+
+    private async Task Logout()
+    {
+        await CustomAuthStateProvider.Logout();
+        isAuthenticated = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await NavMenuVM.IsAuthenticatedAsync();
+        NavMenuVM.AuthenticationStateChanged += UpdateAuthenticationState;
+        await base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        NavMenuVM.AuthenticationStateChanged -= UpdateAuthenticationState;
+    }
+
+    private async void UpdateAuthenticationState(object sender, EventArgs e)
+    {
+        isAuthenticated = await NavMenuVM.IsAuthenticatedAsync();
+        StateHasChanged();
+    }
+}

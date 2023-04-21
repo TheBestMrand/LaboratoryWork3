@@ -26,3 +26,30 @@
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.custom-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 0.25rem;
+    max-width: 400px;
+    max-height: 500px;
+    min-height: 350px;
+    min-width: 400px;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.custom-modal-header {
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.custom-modal-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+

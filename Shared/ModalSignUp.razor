@@ -1,25 +1,32 @@
 ﻿@using LaboratoryWork3.Models.Data
-@using LaboratoryWork3.ViewModels
 @using System.Diagnostics
 @using System.ComponentModel.DataAnnotations
+@using LaboratoryWork3.Models.Services
 @using Microsoft.AspNetCore.Components.Forms
-@inject UserAuthenticationViewModel UserAuthenticationViewModel
+@inject CustomAuthenticationStateProvider CustomAuthStateProvider
 
-<Modal @ref="SignUpModal">
-    <ModalHeader>
-        <h3 class="text-info">Register</h3>
-    </ModalHeader>
-    <ModalBody>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input id="email" class="form-control" @bind="@user.Email"/>
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input id="password" type="password" class="form-control" @bind="@user.Password"/>
-        </div>
-        <button @onclick="@SignUpUser" class="btn btn-primary">Register</button>
-    </ModalBody>
+<Modal @ref="SignUpModal" Class="custom-modal">
+    <div class="custom-modal-wrapper">
+        <ModalHeader Class="custom-modal-header">
+            <h3>Register</h3>
+        </ModalHeader>
+        <ModalBody Class="custom-modal-body">
+            <EditForm Model="@user" OnValidSubmit="@SignUpUser">
+                <DataAnnotationsValidator/>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input id="email" class="form-control" @bind="@user.Email"/>
+                    <ValidationMessage For="@(() => user.Email)"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input id="password" type="password" class="form-control" @bind="@user.Password"/>
+                    <ValidationMessage For="@(() => user.Password)"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </EditForm>
+        </ModalBody>
+    </div>
 </Modal>
 
 @code {
@@ -28,22 +35,8 @@
 
     private async Task  SignUpUser()
     {
-        var validationResults = new List<ValidationResult>();
-        var validationContext = new ValidationContext(user);
-
-        if(!Validator.TryValidateObject(user, validationContext, validationResults, true))
-        {
-            foreach (var validationResult in validationResults)
-            {
-                Debug.WriteLine(validationResult.ErrorMessage);
-            }
-            return;
-        }
-        else
-        {
-            await UserAuthenticationViewModel.SignUpAsync(user.Email, user.Password);
-            SignUpModal.Hide();
-        }
+        await CustomAuthStateProvider.SignUp(user);
+        await SignUpModal.Hide();
     }
 
     public void Show() => SignUpModal.Show();
