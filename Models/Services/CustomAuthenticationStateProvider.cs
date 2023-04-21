@@ -26,7 +26,7 @@ namespace LaboratoryWork3.Models.Services
             return _identity != null && _identity.IsAuthenticated;
         }
 
-        public async Task Login(User user)
+        public async Task<bool> Login(User user)
         {
             var dbUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password);
 
@@ -39,7 +39,9 @@ namespace LaboratoryWork3.Models.Services
 
                 await _localStorageService.SetItemAsync("userEmail", dbUser.Email);
                 NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+                return true;
             }
+            return false;
         }
 
         public async Task Logout()
@@ -49,7 +51,7 @@ namespace LaboratoryWork3.Models.Services
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public async Task SignUp(User user)
+        public async Task<bool> SignUp(User user)
         {
             var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
@@ -57,7 +59,10 @@ namespace LaboratoryWork3.Models.Services
             {
                 _dbContext.Users.Add(user);
                 await _dbContext.SaveChangesAsync();
+                return true;
             }
+
+            return false;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()

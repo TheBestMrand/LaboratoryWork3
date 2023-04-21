@@ -1,7 +1,7 @@
 ﻿@using LaboratoryWork3.Shared
 @using LaboratoryWork3.Models.Services
 @using LaboratoryWork3.ViewModels
-@inject NavMenuViewModel NavMenuVM
+@inject NavMenuViewModel NavMenuVm
 @inject CustomAuthenticationStateProvider CustomAuthStateProvider
 
 <div class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -18,7 +18,7 @@
                         <span class="oi oi-home" aria-hidden="true"></span> Main
                     </NavLink>
                 </li>
-                @if (isAuthenticated)
+                @if (_isAuthenticated)
                 {
                     <li class="nav-item">
                         <NavLink class="nav-link" href="/services">
@@ -43,7 +43,7 @@
                 }
             </ul>
             <ul class="navbar-nav">
-                @if (!isAuthenticated)
+                @if (!_isAuthenticated)
                 {
                     <li class="nav-item">
                         <button class="nav-link btn btn-link" @onclick="@ShowLoginModal">Login</button>
@@ -63,46 +63,46 @@
     </div>
 </div>
 
-<ModalLogin @ref="LoginModal" />
-<ModalSignUp @ref="SignUpModal" />
+<ModalLogin @ref="_loginModal" />
+<ModalSignUp @ref="_signUpModal" />
 
 @code {
-    private ModalLogin LoginModal;
-    private ModalSignUp SignUpModal;
+    private ModalLogin _loginModal;
+    private ModalSignUp _signUpModal;
 
-    private bool isAuthenticated;
+    private bool _isAuthenticated;
 
     private void ShowLoginModal()
     {
-        LoginModal.Show();
+        _loginModal.Show();
     }
 
     private void ShowSignUpModal()
     {
-        SignUpModal.Show();
+        _signUpModal.Show();
     }
 
     private async Task Logout()
     {
         await CustomAuthStateProvider.Logout();
-        isAuthenticated = false;
+        _isAuthenticated = false;
     }
 
     protected override async Task OnInitializedAsync()
     {
-        isAuthenticated = await NavMenuVM.IsAuthenticatedAsync();
-        NavMenuVM.AuthenticationStateChanged += UpdateAuthenticationState;
+        _isAuthenticated = await NavMenuVm.IsAuthenticatedAsync();
+        NavMenuVm.AuthenticationStateChanged += UpdateAuthenticationState;
         await base.OnInitializedAsync();
     }
 
     public void Dispose()
     {
-        NavMenuVM.AuthenticationStateChanged -= UpdateAuthenticationState;
+        NavMenuVm.AuthenticationStateChanged -= UpdateAuthenticationState;
     }
 
     private async void UpdateAuthenticationState(object sender, EventArgs e)
     {
-        isAuthenticated = await NavMenuVM.IsAuthenticatedAsync();
+        _isAuthenticated = await NavMenuVm.IsAuthenticatedAsync();
         StateHasChanged();
     }
 }

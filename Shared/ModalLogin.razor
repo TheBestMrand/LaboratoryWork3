@@ -7,24 +7,30 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @inject CustomAuthenticationStateProvider CustomAuthStateProvider
 
-<Modal @ref="LoginModal">
+<Modal @ref="_loginModal">
     <div class="custom-modal-wrapper">
         <ModalHeader Class="custom-modal-header">
             <h3>Login</h3>
         </ModalHeader>
         <ModalBody Class="custom-modal-body">
-            <EditForm Model="@user" OnValidSubmit="@LoginUser">
+            <EditForm Model="@_user" OnValidSubmit="@LoginUser">
                 <DataAnnotationsValidator/>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input id="email" class="form-control" @bind="@user.Email"/>
-                    <ValidationMessage For="@(() => user.Email)"/>
+                    <input id="email" class="form-control" @bind="@_user.Email"/>
+                    <ValidationMessage For="@(() => _user.Email)"/>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input id="password" type="password" class="form-control" @bind="@user.Password"/>
-                    <ValidationMessage For="@(() => user.Password)"/>
+                    <input id="password" type="password" class="form-control" @bind="@_user.Password"/>
+                    <ValidationMessage For="@(() => _user.Password)"/>
                 </div>
+                @if(!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @_errorMessage
+                    </div>
+                }
                 <button type="submit" class="btn btn-primary">Login</button>
             </EditForm>
         </ModalBody>
@@ -32,14 +38,23 @@
 </Modal>
 
 @code {
-    private User user = new User();
-    private Modal LoginModal;
+    private User _user = new User();
+    private Modal _loginModal;
+
+    private string _errorMessage;
 
     private async Task LoginUser()
     {
-        await CustomAuthStateProvider.Login(user);
-        LoginModal.Hide();
+        var loginResult = await CustomAuthStateProvider.Login(_user);
+        if (loginResult)
+        {
+            await _loginModal.Hide();
+        }
+        else
+        {
+            _errorMessage = "Invalid login or password!";
+        }
     }
 
-    public void Show() => LoginModal.Show();
+    public void Show() => _loginModal.Show();
 }

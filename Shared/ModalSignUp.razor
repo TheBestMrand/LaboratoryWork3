@@ -2,27 +2,39 @@
 @using System.Diagnostics
 @using System.ComponentModel.DataAnnotations
 @using LaboratoryWork3.Models.Services
+@using LaboratoryWork3.ViewModels
 @using Microsoft.AspNetCore.Components.Forms
 @inject CustomAuthenticationStateProvider CustomAuthStateProvider
 
-<Modal @ref="SignUpModal" Class="custom-modal">
+<Modal @ref="_signUpModal" Class="custom-modal">
     <div class="custom-modal-wrapper">
         <ModalHeader Class="custom-modal-header">
             <h3>Register</h3>
         </ModalHeader>
         <ModalBody Class="custom-modal-body">
-            <EditForm Model="@user" OnValidSubmit="@SignUpUser">
+            <EditForm Model="@_newUser" OnValidSubmit="@SignUpUser">
                 <DataAnnotationsValidator/>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input id="email" class="form-control" @bind="@user.Email"/>
-                    <ValidationMessage For="@(() => user.Email)"/>
+                    <input id="email" class="form-control" @bind="@_newUser.Email"/>
+                    <ValidationMessage For="@(() => _newUser.Email)"/>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input id="password" type="password" class="form-control" @bind="@user.Password"/>
-                    <ValidationMessage For="@(() => user.Password)"/>
+                    <input id="password" type="password" class="form-control" @bind="@_newUser.Password"/>
+                    <ValidationMessage For="@(() => _newUser.Password)"/>
                 </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm password:</label>
+                    <input id="confirmPassword" type="password" class="form-control" @bind="@_newUser.ConfirmPassword"/>
+                    <ValidationMessage For="@(() => _newUser.ConfirmPassword)"/>
+                </div>
+                @if(!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @_errorMessage
+                    </div>
+                }
                 <button type="submit" class="btn btn-primary">Sign Up</button>
             </EditForm>
         </ModalBody>
@@ -30,14 +42,31 @@
 </Modal>
 
 @code {
-    private User user = new User();
-    private Modal SignUpModal;
+
+    private SignUpViewModel _newUser = new SignUpViewModel();
+    private User _user;
+    private Modal _signUpModal;
+
+    private string _errorMessage;
 
     private async Task  SignUpUser()
-    {
-        await CustomAuthStateProvider.SignUp(user);
-        await SignUpModal.Hide();
+    { 
+        _user = new User()
+        {
+            Email = _newUser.Email,
+            Password = _newUser.Password
+        };
+        bool signUpResult = await CustomAuthStateProvider.SignUp(_user);
+
+        if (signUpResult)
+        {
+            await _signUpModal.Hide();
+        }
+        else
+        {
+            _errorMessage = "This email address is already in use";
+        }
     }
 
-    public void Show() => SignUpModal.Show();
+    public void Show() => _signUpModal.Show();
 }
