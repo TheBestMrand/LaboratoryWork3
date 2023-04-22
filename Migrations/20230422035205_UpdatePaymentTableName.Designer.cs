@@ -3,6 +3,7 @@ using System;
 using LaboratoryWork3.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaboratoryWork3.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230422035205_UpdatePaymentTableName")]
+    partial class UpdatePaymentTableName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
@@ -32,6 +35,12 @@ namespace LaboratoryWork3.Migrations
                     b.Property<int>("ResidentId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ResidentId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ResidentId2")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ServiceType")
                         .HasColumnType("INTEGER");
 
@@ -39,41 +48,9 @@ namespace LaboratoryWork3.Migrations
 
                     b.HasIndex("ResidentId");
 
-                    b.ToTable("Payments");
+                    b.HasIndex("ResidentId1");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 50.0m,
-                            Date = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 1,
-                            ServiceType = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 40.0m,
-                            Date = new DateTime(2023, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 1,
-                            ServiceType = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Amount = 60.0m,
-                            Date = new DateTime(2023, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 2,
-                            ServiceType = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 30.0m,
-                            Date = new DateTime(2023, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 3,
-                            ServiceType = 1
-                        });
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("LaboratoryWork3.Models.Data.Resident", b =>
@@ -93,26 +70,6 @@ namespace LaboratoryWork3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Residents");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "123 Main St",
-                            Surname = "Smith"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "456 Elm St",
-                            Surname = "Johnson"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "789 Oak St",
-                            Surname = "Williams"
-                        });
                 });
 
             modelBuilder.Entity("LaboratoryWork3.Models.Data.User", b =>
@@ -142,6 +99,14 @@ namespace LaboratoryWork3.Migrations
                         .HasForeignKey("ResidentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LaboratoryWork3.Models.Data.Resident", "Resident")
+                        .WithMany()
+                        .HasForeignKey("ResidentId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Resident");
                 });
 
             modelBuilder.Entity("LaboratoryWork3.Models.Data.Resident", b =>

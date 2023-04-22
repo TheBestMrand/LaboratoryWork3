@@ -1,8 +1,44 @@
 ﻿@page "/services"
 @using Microsoft.AspNetCore.Authorization
 @using LaboratoryWork3.Shared
+@using LaboratoryWork3.Models.Data
 @attribute [Authorize]
 
 <RedirectToLogin/>
 
 <h3>Services</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Service #</th>
+        <th>Service Name</th>
+        <th>Service Price</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in _services)
+        {
+            <tr>
+                <td>@((int)service.Type + 1)</td>
+                <td>@service.Type.ToString()</td>
+                <td>@service.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code{
+
+    private List<Service> _services = new List<Service>();
+
+    protected override void OnInitialized()
+    {
+        _services.Add(new Service(ServiceType.Gas, 1.5));
+        _services.Add(new Service(ServiceType.Water, 0.5));
+        _services.Add(new Service(ServiceType.Internet, 0.12));
+         _services.Add(new Service(ServiceType.Electricity, 0.3));
+        base.OnInitialized();
+    }
+
+}

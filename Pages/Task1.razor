@@ -1,0 +1,77 @@
+﻿@page "/task1"
+@using LaboratoryWork3.Shared
+@using LaboratoryWork3.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using LaboratoryWork3.Models.Data
+@inject Task1ViewModel Task1Vm
+@attribute [Authorize]
+
+<RedirectToLogin/>
+
+<h3>Task 1</h3>
+
+<div>
+    <h3>Average Gas Bill for Residents on a Street</h3>
+    <form @onsubmit="CalculateAverageGasBill">
+        <div class="form-group">
+            <label for="streetName">Enter street name: </label>
+            <input id="streetName" class="form-control" @bind="_streetName"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Calculate</button>
+    </form>
+</div>
+
+@if(!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @_errorMessage
+    </div>
+}
+
+<h4>Average gas bill: @_averageGasBill.ToString("F2")</h4>
+
+<table class="table table-striped table-bordered">
+    <thead>
+    <th>Id</th>
+    <th>Surname</th>
+    <th>Address</th>
+    </thead>
+    <tbody>
+    @foreach (var resident in _residents)
+    {
+        <tr>
+            <td>@resident.Id</td>
+            <td>@resident.Surname</td>
+            <td>@resident.Address</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code{
+
+    private string _streetName = string.Empty;
+    private string _errorMessage = string.Empty;
+    private decimal _averageGasBill = 0;
+    private List<Resident> _residents = new List<Resident>();
+
+    private async Task CalculateAverageGasBill()
+    {
+        var result = await Task1Vm.GetAverageGasBillAndResidentsForStreetAsync(_streetName);
+        _averageGasBill = result.averageGasBill;
+        _residents = result.residents;
+        if(_residents is null)
+        {
+            _errorMessage = "No residents found for this street";
+        }
+        else if (string.IsNullOrEmpty(_streetName))
+        {
+            _errorMessage = "Street name cannot be empty";
+        }
+        else
+        {
+            _errorMessage = string.Empty;
+        }
+    }
+
+}

@@ -1,0 +1,51 @@
+﻿@page "/residents"
+@using LaboratoryWork3.Shared
+@using LaboratoryWork3.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using LaboratoryWork3.Models.Data
+@inject ResidentsViewModel ResidentsVm
+@attribute [Authorize]
+
+<RedirectToLogin/>
+<h3>Residents</h3>
+
+@if (ResidentsVm.Residents is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <th>Id</th>
+            <th>Surname</th>
+            <th>Address</th>
+            <th>Payments</th>
+        </thead>
+        <tbody>
+            @foreach (var resident in ResidentsVm.Residents)
+            {
+                <tr>
+                    <td>@resident.Id</td>
+                    <td>@resident.Surname</td>
+                    <td>@resident.Address</td>
+                    <td>
+                        <button class="btn btn-link" @onclick="() => _modalPayments.Show(resident)">View Payments</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<ModalPayments @ref="_modalPayments"/>
+
+@code {
+    //Fix payments
+    private ModalPayments _modalPayments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ResidentsVm.LoadResidentsAsync();
+    }
+}

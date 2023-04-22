@@ -1,0 +1,25 @@
+﻿@page "/task2"
+@using LaboratoryWork3.Shared
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<RedirectToLogin/>
+
+<h3>Task2</h3>
+
+<div>
+    <h3>Service with the Largest amount paid in the last quarter</h3>
+    <p>The service with the largest amount paid in the last quarter is: <strong>@_largestServiceName</strong></p>
+</div>
+
+@code{
+
+    private string _largestServiceName = string.Empty;
+
+    protected override Task OnInitializedAsync()
+    {
+        //Implement logic in future
+        return base.OnInitializedAsync();
+    }
+
+}

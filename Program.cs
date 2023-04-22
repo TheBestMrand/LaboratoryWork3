@@ -16,6 +16,10 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddScoped<NavMenuViewModel>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<LocalStorageService>();
+builder.Services.AddScoped<RedirectToLoginViewModel>();
+builder.Services.AddScoped<ResidentService>();
+builder.Services.AddScoped<ResidentsViewModel>();
+builder.Services.AddScoped<Task1ViewModel>();
 
 builder.Services.AddBlazorise(option =>
 {

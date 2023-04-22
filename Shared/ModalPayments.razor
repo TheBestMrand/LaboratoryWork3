@@ -1,0 +1,34 @@
+﻿@using LaboratoryWork3.Models.Data
+<Modal @ref="_paymentModal">
+    <div class="custom-modal-wrapper">
+        <ModalHeader Class="custom-modal-header">
+            <h3>Payments for @ResidentName</h3>
+        </ModalHeader>
+        <ModalBody Class="custom-modal-body">
+            <ul class="list-group">
+                @foreach (var payment in Payments)
+                {
+                    <li class="list-group-item">
+                        Service Type: @payment.ServiceType, Amount: @payment.Amount, Date: @payment.Date.ToShortDateString();
+                    </li>
+                }
+            </ul>
+            <button class="btn btn-secondary mt-3" @onclick="Hide">Close</button>
+        </ModalBody>
+    </div>
+</Modal>
+
+@code{
+    private Modal _paymentModal;
+    private string ResidentName { get; set; }
+    private List<Payment> Payments { get; set; } = new List<Payment>();
+
+    public void Show(Resident resident)
+    {
+        Payments = resident.Payments.ToList();
+        ResidentName = resident.Surname;
+        _paymentModal.Show();
+    }
+
+    public void Hide() => _paymentModal.Hide();
+}

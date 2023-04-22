@@ -67,18 +67,14 @@ namespace LaboratoryWork3.Models.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var identity = new ClaimsIdentity();
-            string email = await _localStorageService.GetItemAsync("userEmail");
-
-            if (!string.IsNullOrEmpty(email))
+            if (_identity == null || !_identity.IsAuthenticated)
             {
-                identity = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, email),
-                }, "apiauth_type");
+                return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
             }
-
-            return new AuthenticationState(new ClaimsPrincipal(identity));
+            else
+            {
+                return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(_identity)));
+            }
         }
 
         private async Task LoadAuthenticationStateAsync()
