@@ -57,16 +57,17 @@
 
     private async Task CalculateAverageGasBill()
     {
-        var result = await Task1Vm.GetAverageGasBillAndResidentsForStreetAsync(_streetName);
-        _averageGasBill = result.averageGasBill;
-        _residents = result.residents;
-        if(_residents is null)
-        {
-            _errorMessage = "No residents found for this street";
-        }
-        else if (string.IsNullOrEmpty(_streetName))
+        await Task1Vm.LoadResidentsAsync(_streetName);
+        _averageGasBill = Task1Vm.AverageGasBill;
+        _residents = Task1Vm.Residents;
+
+        if (string.IsNullOrEmpty(_streetName.Trim()))
         {
             _errorMessage = "Street name cannot be empty";
+        }
+        else if(_residents.Count == 0)
+        {
+            _errorMessage = "No residents found for this street";
         }
         else
         {

@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using LaboratoryWork3.Models.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace LaboratoryWork3.Models.Services
 {
@@ -28,7 +27,17 @@ namespace LaboratoryWork3.Models.Services
 
         public async Task<bool> Login(User user)
         {
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password);
+            User dbUser = null;
+
+            var users = await _dbContext.Users.ToListAsync();
+            foreach (var u in users)
+            {
+                if (u.Email.Equals(user.Email) && u.Password == user.Password)
+                {
+                    dbUser = u;
+                    break;
+                }
+            }
 
             if (dbUser != null)
             {
@@ -44,6 +53,7 @@ namespace LaboratoryWork3.Models.Services
             return false;
         }
 
+
         public async Task Logout()
         {
             _identity = new ClaimsIdentity();
@@ -53,9 +63,19 @@ namespace LaboratoryWork3.Models.Services
 
         public async Task<bool> SignUp(User user)
         {
-            var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            var existingUser = false;
 
-            if (existingUser == null)
+            var users = await _dbContext.Users.ToListAsync();
+            foreach (var u in users)
+            {
+                if (u.Email == user.Email)
+                {
+                    existingUser = true;
+                    break;
+                }
+            }
+
+            if (!existingUser)
             {
                 _dbContext.Users.Add(user);
                 await _dbContext.SaveChangesAsync();
@@ -64,6 +84,7 @@ namespace LaboratoryWork3.Models.Services
 
             return false;
         }
+
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {

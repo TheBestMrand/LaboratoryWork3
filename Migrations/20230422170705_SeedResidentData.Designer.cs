@@ -3,6 +3,7 @@ using System;
 using LaboratoryWork3.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaboratoryWork3.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230422170705_SeedResidentData")]
+    partial class SeedResidentData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
@@ -329,102 +332,6 @@ namespace LaboratoryWork3.Migrations
                             Date = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ResidentId = 3,
                             ServiceType = 3
-                        },
-                        new
-                        {
-                            Id = 37,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 0
-                        },
-                        new
-                        {
-                            Id = 38,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 1
-                        },
-                        new
-                        {
-                            Id = 39,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 2
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 3
-                        },
-                        new
-                        {
-                            Id = 41,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 0
-                        },
-                        new
-                        {
-                            Id = 42,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 1
-                        },
-                        new
-                        {
-                            Id = 43,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 2
-                        },
-                        new
-                        {
-                            Id = 44,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 3
-                        },
-                        new
-                        {
-                            Id = 45,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 0
-                        },
-                        new
-                        {
-                            Id = 46,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 1
-                        },
-                        new
-                        {
-                            Id = 47,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 2
-                        },
-                        new
-                        {
-                            Id = 48,
-                            Amount = 100m,
-                            Date = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ResidentId = 4,
-                            ServiceType = 3
                         });
                 });
 
@@ -464,12 +371,6 @@ namespace LaboratoryWork3.Migrations
                             Id = 3,
                             Address = "789 Oak St",
                             Surname = "Williams"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Address = "123 Main St",
-                            Surname = "Brown"
                         });
                 });
 

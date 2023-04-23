@@ -5,42 +5,22 @@ namespace LaboratoryWork3.ViewModels
 {
     public class Task1ViewModel
     {
-        //This can be simplified I think
-        private readonly ResidentService _residentService;
+        public decimal AverageGasBill { get; set; }
+        public List<Resident> Residents { get; set; } = new List<Resident>();
 
-        public Task1ViewModel(ResidentService residentService)
+        private readonly ResidentService _residentService;
+        private readonly PaymentService _paymentService;
+
+        public Task1ViewModel(ResidentService residentService, PaymentService paymentService)
         {
             _residentService = residentService;
+            _paymentService = paymentService;
         }
-        //Fix this method it is awfull and not readable
-        public async Task<(decimal averageGasBill, List<Resident> residents)>
-            GetAverageGasBillAndResidentsForStreetAsync(string street)
+
+        public async Task LoadResidentsAsync(string street)
         {
-            var totalGasBill = 0.0m;
-            var gasPaymentsCount = 0;
-            var targetResidents = new List<Resident>();
-
-            var residents = await _residentService.GetResidentsAsync();
-
-            foreach (var resident in residents)
-            {
-                if (resident.Address.Contains(street))
-                {
-                    targetResidents.Add(resident);
-
-                    foreach (var payment in resident.Payments)
-                    {
-                        if (payment.ServiceType == ServiceType.Gas && payment.Date.Month == DateTime.Now.Month)
-                        {
-                            totalGasBill += payment.Amount;
-                            gasPaymentsCount++;
-                        }
-                    }
-                }
-            }
-
-            var averageGasBill = gasPaymentsCount > 0 ? totalGasBill / gasPaymentsCount : 0;
-            return (averageGasBill, targetResidents);
+            var _residentsForPaymentCheck = await _residentService.GetResidentsAsync();
+            (AverageGasBill, Residents) = await _paymentService.GetAverageGasBillAndResidentsForStreetAsync(street, _residentsForPaymentCheck);
         }
     }
 }

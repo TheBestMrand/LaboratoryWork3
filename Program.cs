@@ -18,8 +18,11 @@ builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<RedirectToLoginViewModel>();
 builder.Services.AddScoped<ResidentService>();
+builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ResidentsViewModel>();
 builder.Services.AddScoped<Task1ViewModel>();
+builder.Services.AddScoped<Task2ViewModel>();
+
 
 builder.Services.AddBlazorise(option =>
 {

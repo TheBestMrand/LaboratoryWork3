@@ -29,16 +29,34 @@ namespace LaboratoryWork3.Models
         {
             modelBuilder.Entity<Resident>().HasData(
                 new Resident { Id = 1, Surname = "Smith", Address = "123 Main St" },
-                new Resident { Id = 2, Surname = "Johnson", Address = "456 Elm St" },
-                new Resident { Id = 3, Surname = "Williams", Address = "789 Oak St" }
+                new Resident { Id = 2, Surname = "Johnson", Address = "456 Pine St" },
+                new Resident { Id = 3, Surname = "Williams", Address = "789 Oak St" },
+                new Resident { Id = 4, Surname = "Brown", Address = "123 Main St" }
             );
 
-            modelBuilder.Entity<Payment>().HasData(
-                new Payment { Id = 1, ResidentId = 1, ServiceType = ServiceType.Electricity, Amount = 50.0m, Date = DateTime.Parse("2023-01-15") },
-                new Payment { Id = 2, ResidentId = 1, ServiceType = ServiceType.Gas, Amount = 40.0m, Date = DateTime.Parse("2023-01-20") },
-                new Payment { Id = 3, ResidentId = 2, ServiceType = ServiceType.Internet, Amount = 60.0m, Date = DateTime.Parse("2023-01-10") },
-                new Payment { Id = 4, ResidentId = 3, ServiceType = ServiceType.Water, Amount = 30.0m, Date = DateTime.Parse("2023-01-25") }
-            );  
+            int paymentId = 1;
+            DateTime startDate = new DateTime(2023, 2, 1);
+            ServiceType[] serviceTypes = Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>().ToArray();
+
+            for (int residentId = 1; residentId <= 4; residentId++)
+            {
+                for (int monthOffset = 0; monthOffset < 3; monthOffset++)
+                {
+                    DateTime paymentDate = startDate.AddMonths(monthOffset);
+
+                    foreach (ServiceType serviceType in serviceTypes)
+                    {
+                        modelBuilder.Entity<Payment>().HasData(new Payment
+                        {
+                            Id = paymentId++,
+                            ResidentId = residentId,
+                            ServiceType = serviceType,
+                            Amount = 100,
+                            Date = paymentDate
+                        });
+                    }
+                }
+            }
         }
 
     }
