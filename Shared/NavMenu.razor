@@ -2,8 +2,6 @@
 @using LaboratoryWork3.Models.Services
 @using LaboratoryWork3.ViewModels
 @inject NavMenuViewModel NavMenuVm
-@inject CustomAuthenticationStateProvider CustomAuthStateProvider
-@inject NavigationManager NavigationManager
 
 <div class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
@@ -85,9 +83,8 @@
 
     private async Task Logout()
     {
-        await CustomAuthStateProvider.Logout();
+        await NavMenuVm.Logout();
         _isAuthenticated = false;
-        NavigationManager.NavigateTo("/", true);
     }
 
     protected override async Task OnInitializedAsync()

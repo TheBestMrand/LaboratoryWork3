@@ -14,6 +14,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<NavMenuViewModel>();
+builder.Services.AddScoped<SignUpViewModel>();
+builder.Services.AddScoped<LoginViewModel>();
 builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<RedirectToLoginViewModel>();

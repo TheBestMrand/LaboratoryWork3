@@ -4,7 +4,7 @@
 @using LaboratoryWork3.Models.Services
 @using LaboratoryWork3.ViewModels
 @using Microsoft.AspNetCore.Components.Forms
-@inject CustomAuthenticationStateProvider CustomAuthStateProvider
+@inject SignUpViewModel SignUpVm
 
 <Modal @ref="_signUpModal" Class="custom-modal">
     <div class="custom-modal-wrapper">
@@ -12,22 +12,22 @@
             <h3>Register</h3>
         </ModalHeader>
         <ModalBody Class="custom-modal-body">
-            <EditForm Model="@_newUser" OnValidSubmit="@SignUpUser">
+            <EditForm Model="@SignUpVm" OnValidSubmit="@SignUpUser">
                 <DataAnnotationsValidator/>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input id="email" class="form-control" @bind="@_newUser.Email"/>
-                    <ValidationMessage For="@(() => _newUser.Email)"/>
+                    <input id="email" class="form-control" @bind="@SignUpVm.Email"/>
+                    <ValidationMessage For="@(() => SignUpVm.Email)"/>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input id="password" type="password" class="form-control" @bind="@_newUser.Password"/>
-                    <ValidationMessage For="@(() => _newUser.Password)"/>
+                    <input id="password" type="password" class="form-control" @bind="@SignUpVm.Password"/>
+                    <ValidationMessage For="@(() => SignUpVm.Password)"/>
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirm password:</label>
-                    <input id="confirmPassword" type="password" class="form-control" @bind="@_newUser.ConfirmPassword"/>
-                    <ValidationMessage For="@(() => _newUser.ConfirmPassword)"/>
+                    <input id="confirmPassword" type="password" class="form-control" @bind="@SignUpVm.ConfirmPassword"/>
+                    <ValidationMessage For="@(() => SignUpVm.ConfirmPassword)"/>
                 </div>
                 @if(!string.IsNullOrEmpty(_errorMessage))
                 {
@@ -42,8 +42,6 @@
 </Modal>
 
 @code {
-
-    private SignUpViewModel _newUser = new SignUpViewModel();
     private User _user;
     private Modal _signUpModal;
 
@@ -53,10 +51,10 @@
     { 
         _user = new User()
         {
-            Email = _newUser.Email,
-            Password = _newUser.Password
+            Email = SignUpVm.Email,
+            Password = SignUpVm.Password
         };
-        bool signUpResult = await CustomAuthStateProvider.SignUp(_user);
+        bool signUpResult = await SignUpVm.SignUp(_user);
 
         if (signUpResult)
         {

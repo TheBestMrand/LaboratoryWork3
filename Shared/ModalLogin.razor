@@ -2,11 +2,11 @@
 @using LaboratoryWork3.Models.Data
 @using System.ComponentModel.DataAnnotations
 @using LaboratoryWork3.Models.Services
+@using LaboratoryWork3.ViewModels
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-@inject CustomAuthenticationStateProvider CustomAuthStateProvider
-@inject NavigationManager NavigationManager
+@inject LoginViewModel LoginVm
 
 <Modal @ref="_loginModal">
     <div class="custom-modal-wrapper">
@@ -39,7 +39,6 @@
 </Modal>
 
 @code {
-    //This component needs some tweaks
     private User _user = new User();
     private Modal _loginModal;
 
@@ -47,11 +46,10 @@
 
     private async Task LoginUser()
     {
-        var loginResult = await CustomAuthStateProvider.Login(_user);
+        var loginResult = await LoginVm.Login(_user);
         if (loginResult)
         {
             await _loginModal.Hide();
-            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
         }
         else
         {

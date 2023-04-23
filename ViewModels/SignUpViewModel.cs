@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using LaboratoryWork3.Models.Data;
+using LaboratoryWork3.Models.Services;
 
 namespace LaboratoryWork3.ViewModels
 {
@@ -19,5 +21,18 @@ namespace LaboratoryWork3.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        private readonly CustomAuthenticationStateProvider _authenticationStateProvider;
+
+        public SignUpViewModel(CustomAuthenticationStateProvider authenticationStateProvider)
+        {
+            _authenticationStateProvider = authenticationStateProvider;
+        }
+
+        public async Task<bool> SignUp(User user)
+        {
+            var result = await _authenticationStateProvider.SignUp(user);
+            return result;
+        }
     }
 }
