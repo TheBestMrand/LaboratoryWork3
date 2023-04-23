@@ -23,7 +23,6 @@ builder.Services.AddScoped<ResidentsViewModel>();
 builder.Services.AddScoped<Task1ViewModel>();
 builder.Services.AddScoped<Task2ViewModel>();
 
-
 builder.Services.AddBlazorise(option =>
 {
     option.Immediate = true;

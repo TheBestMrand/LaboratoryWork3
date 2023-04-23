@@ -4,29 +4,34 @@
 @using LaboratoryWork3.Models.Data
 @attribute [Authorize]
 
-<RedirectToLogin/>
+<AuthorizeView>
+    <Authorized>
+        <h3>Services</h3>
 
-<h3>Services</h3>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>Service #</th>
-        <th>Service Name</th>
-        <th>Service Price</th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var service in _services)
-        {
+        <table class="table">
+            <thead>
             <tr>
-                <td>@((int)service.Type + 1)</td>
-                <td>@service.Type.ToString()</td>
-                <td>@service.Price</td>
+                <th>Service #</th>
+                <th>Service Name</th>
+                <th>Service Price</th>
             </tr>
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+            @foreach (var service in _services)
+            {
+                <tr>
+                    <td>@((int)service.Type + 1)</td>
+                    <td>@service.Type.ToString()</td>
+                    <td>@service.Price</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
 

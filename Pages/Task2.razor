@@ -6,33 +6,39 @@
 @inject Task2ViewModel Task2Vm
 @attribute [Authorize]
 
-<RedirectToLogin/>
 
-<h3>Task2</h3>
+<AuthorizeView>
+    <Authorized>
+    <h3>Task2</h3>
 
-<div>
-    <h3>Service with the Largest amount paid in the last quarter</h3>
-    <p>The service with the largest amount paid in the last quarter is: <strong>@_largestServiceName</strong> with paid amount of @_largestServiceAmount </p>
-</div>
+    <div>
+        <h3>Service with the Largest amount paid in the last quarter</h3>
+        <p>The service with the largest amount paid in the last quarter is: <strong>@_largestServiceName</strong> with paid amount of @_largestServiceAmount </p>
+    </div>
 
-<div>
-    <h3>Amount paid for each service in the last quarter</h3>
-    <table class="table table-striped table-bordered">
-        <thead>
-        <th>Service</th>
-        <th>Amount</th>
-        </thead>
-        <tbody>
-        @foreach (var service in _amountForService)
-        {
-            <tr>
-                <td>@service.Key</td>
-                <td>@service.Value</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+    <div>
+        <h3>Amount paid for each service in the last quarter</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <th>Service</th>
+            <th>Amount</th>
+            </thead>
+            <tbody>
+            @foreach (var service in _amountForService)
+            {
+                <tr>
+                    <td>@service.Key</td>
+                    <td>@service.Value</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
 
